@@ -14,7 +14,7 @@ declare module '@vue/runtime-core' {
 // "export default () => {}" function below (which runs individually
 // for each client)
 // const baseURL = 'http://localhost:8000/api/';
-const baseURL = 'saya-uisi-api.qcbkp.tech';
+const baseURL = 'https://saya-uisi-api.qcbkp.tech/api/';
 const api = axios.create({ baseURL });
 // const storageURL = 'http://localhost:8000/storage/';
 const storageURL = 'saya-uisi-api.qcbkp.tech/storage/';
