@@ -7,7 +7,8 @@ import { Cookies } from 'quasar';
  * @returns {AxiosInstance} The axios instance with authorization headers.
  */
 const useApiWithAuthorization = axios.create({
-  baseURL: 'http://localhost:8000/api/',
+  baseURL: 'saya-uisi-api.qcbkp.tech/api/',
+  // baseURL: 'http://localhost:8000/api/',
   headers: {
     Authorization: `Bearer ${Cookies.get('token')}`,
   },
