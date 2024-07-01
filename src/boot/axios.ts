@@ -17,7 +17,7 @@ declare module '@vue/runtime-core' {
 const baseURL = 'https://saya-uisi-api.qcbkp.tech/api/';
 const api = axios.create({ baseURL });
 // const storageURL = 'http://localhost:8000/storage/';
-const storageURL = 'saya-uisi-api.qcbkp.tech/storage/';
+const storageURL = 'https://saya-uisi-api.qcbkp.tech/storage/';
 
 export default boot(({ app }) => {
   // for use inside Vue files (Options API) through this.$axios and this.$api
