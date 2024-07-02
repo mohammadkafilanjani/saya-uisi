@@ -80,10 +80,10 @@ const paidModel = ref();
 const fetchBill = async (query?: string) => {
   try {
     if (query === undefined) {
-      const response = await useApiWithAuthorization.get('user/filtered-bills/?status=unpaid');
+      const response = await useApiWithAuthorization.get('user/filtered-bills?status=unpaid');
       userBills.value = response.data
     } else {
-      const response = await useApiWithAuthorization.get(`user/filtered-bills/?status=${query}`);
+      const response = await useApiWithAuthorization.get(`user/filtered-bills?status=${query}`);
       userBills.value = response.data
     }
   } catch (error) {
