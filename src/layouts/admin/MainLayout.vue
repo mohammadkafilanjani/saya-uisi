@@ -2,21 +2,9 @@
   <q-layout view="hHh lpR fFf" class="bg-grey-1">
     <q-header elevated class="bg-grey text-white" height-hint="64">
       <q-toolbar class="GNL__toolbar">
-        <q-btn
-          flat
-          dense
-          round
-          @click="toggleLeftDrawer"
-          aria-label="Menu"
-          icon="menu"
-          class="q-mr-sm"
-        />
+        <q-btn flat dense round @click="toggleLeftDrawer" aria-label="Menu" icon="menu" class="q-mr-sm" />
 
-        <q-toolbar-title
-          v-if="$q.screen.gt.xs"
-          shrink
-          class="row items-center no-wrap"
-        >
+        <q-toolbar-title v-if="$q.screen.gt.xs" shrink class="row items-center no-wrap">
           <img src="~/assets/img/uisi-logo.png" width="150px" />
         </q-toolbar-title>
 
@@ -25,14 +13,7 @@
         <q-space />
 
         <div class="q-gutter-sm row items-center no-wrap">
-          <q-btn
-            v-if="$q.screen.gt.sm"
-            round
-            dense
-            flat
-            color="text-grey-7"
-            icon="apps"
-          >
+          <q-btn v-if="$q.screen.gt.sm" round dense flat color="text-grey-7" icon="apps">
             <q-tooltip>Google Apps</q-tooltip>
           </q-btn>
           <q-btn round dense flat icon="notifications">
@@ -70,21 +51,10 @@
       </q-toolbar>
     </q-header>
 
-    <q-drawer
-      v-model="leftDrawerOpen"
-      show-if-above
-      bordered
-      class="bg-white"
-      :width="280"
-    >
+    <q-drawer v-model="leftDrawerOpen" show-if-above bordered class="bg-white" :width="280">
       <q-scroll-area class="fit">
         <q-list padding class="text-grey-8">
-          <q-item
-            class="GNL__drawer-item"
-            v-ripple
-            :to="{ name: 'AdminDashboardPage' }"
-            clickable
-          >
+          <q-item class="GNL__drawer-item" v-ripple :to="{ name: 'AdminDashboardPage' }" clickable>
             <q-item-section avatar>
               <q-icon name="dashboard" />
             </q-item-section>
@@ -92,7 +62,7 @@
               <q-item-label>Dashboard</q-item-label>
             </q-item-section>
           </q-item>
-          <q-expansion-item
+          <!-- <q-expansion-item
             expand-separator
             icon="person"
             class="text-weight-bold"
@@ -206,13 +176,8 @@
             <q-item-section>
               <q-item-label>Manajemen Pembayaran</q-item-label>
             </q-item-section>
-          </q-item>
-          <q-item
-            class="GNL__drawer-item"
-            v-ripple
-            clickable
-            :to="{ name: 'AdminPengumumanPage' }"
-          >
+          </q-item> -->
+          <q-item class="GNL__drawer-item" v-ripple clickable :to="{ name: 'AdminPengumumanPage' }">
             <q-item-section avatar>
               <q-icon name="grid_view" />
             </q-item-section>

@@ -46,6 +46,8 @@ const fetchJadwal = async () => {
   try {
     const response = await useApiWithAuthorization.get('jadwal-mahasiswa');
     jadwalMahasiswa.value = response.data.data;
+    console.log(response);
+
   } catch (error) {
     console.log(error);
   }

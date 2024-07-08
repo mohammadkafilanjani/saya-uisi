@@ -29,7 +29,7 @@
         <div class="text-body2 q-mt-sm text-grey">Semester Akademik saat ini :</div>
         <div class="text-body2 q-mt-sm q-mb-md">2023/2024 Genap</div>
         <div class="text-body2 q-mt-sm text-grey">Semester Studi</div>
-        <div class="text-body2 q-mt-sm q-mb-md">{{ mahasiswa.semester }}</div>
+        <div class="text-body2 q-mt-sm q-mb-md">{{ mahasiswa.semester - 2 }}</div>
         <div class="text-body2 q-mt-sm text-grey">Status Mahasiswa</div>
         <q-badge color="green">Mahasiswa Aktif</q-badge>
       </q-card-section>
