@@ -23,10 +23,6 @@
               <td class="text-left">{{ matkul.nilai }}</td>
               <td class="text-left">{{ n.semester }}</td>
               <td class="text-left">{{ matkul.masuk_transkrip }}</td>
-              <!-- <td class="text-left"><q-btn color="red" class="q-mr-md"
-                  @click="handleDeleteProgramStudi(programStudi.id)">hapus</q-btn>
-                <q-btn color="green" @click="showEditDialog(programStudi.id, programStudi.name)">edit</q-btn>
-              </td> -->
             </tr>
           </template>
           <tr>
@@ -60,9 +56,9 @@ interface Nilai {
   mata_kuliah: MataKuliah[];
 }
 
-const nilai = ref<Nilai[]>([]);
-const totalSks = ref(0);
-const totalSksDiakui = ref(0);
+let nilai = ref<Nilai[]>([]);
+let totalSks = ref(0);
+let totalSksDiakui = ref(0);
 
 const fetchRiwayatStudi = async () => {
   try {
