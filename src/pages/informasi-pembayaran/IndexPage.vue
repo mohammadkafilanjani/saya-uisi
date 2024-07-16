@@ -17,15 +17,13 @@
               <th class="text-left">No</th>
               <th class="text-left">Deskripsi</th>
               <th class="text-left">Nominal</th>
-              <th class="text-left">Tanggal Verifikasi</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(bill, index) in userBills" :key="bill.id">
+            <tr v-for="(bill, index) in userBills" :key="bill.Deskripsi">
               <td class="text-left">{{ index + 1 }}</td>
-              <td class="text-left">{{ bill.description }}</td>
-              <td class="text-left">{{ bill.amount }}</td>
-              <td class="text-left">{{ date.formatDate(bill.updated_at, 'DD-MM-YYYY') }}</td>
+              <td class="text-left">{{ bill.Deskripsi }}</td>
+              <td class="text-left">{{ bill.Nominal }}</td>
             </tr>
             <tr v-if="userBills.length === 0">
               <td colspan="4">
@@ -46,20 +44,15 @@
 <script setup lang="ts">
 import { useApiWithAuthorization } from 'src/composables/api';
 import { onMounted, ref, watchEffect } from 'vue';
-import { date } from 'quasar';
 
-interface BillUser {
-  id: number;
-  user_id: number;
-  description: string;
-  amount: number;
-  due_date: string;
-  is_paid: number;
-  updated_at: number;
+interface Tagihan {
+  Deskripsi: string;
+  Nominal: string;
+  'Status Bayar': string;
 }
 
 const paidTitle = ref('');
-const userBills = ref<BillUser[]>([]);
+const userBills = ref<Tagihan[]>([]);
 const paidOptions = [
   {
     label: 'Belum Terbayar',
@@ -75,24 +68,44 @@ const paidOptions = [
   }
 
 ];
-const paidModel = ref();
 
-const fetchBill = async (query?: string) => {
+const paidModel = ref({
+  label: '',
+  value: ''
+});
+const belumTerbayar = ref<Tagihan[]>([]);
+const sudahTerbayar = ref<Tagihan[]>([]);
+const mendatang = ref<Tagihan[]>([]);
+
+const fetchBill = async () => {
   try {
-    if (query === undefined) {
-      const response = await useApiWithAuthorization.get('user/filtered-bills?status=unpaid');
-      userBills.value = response.data
-    } else {
-      const response = await useApiWithAuthorization.get(`user/filtered-bills?status=${query}`);
-      userBills.value = response.data
-    }
+    const response = await useApiWithAuthorization.get('student-bill');
+
+    belumTerbayar.value = response.data.rows.filter((tagihan: Tagihan) => {
+      return tagihan['Status Bayar'] === 'Belum dibayar'
+    });
+    sudahTerbayar.value = response.data.rows.filter((tagihan: Tagihan) => {
+      return tagihan['Status Bayar'] === 'Sudah dibayar'
+    });
+    mendatang.value = response.data.rows.filter((tagihan: Tagihan) => {
+      return tagihan['Status Bayar'] === 'Tagihan Mendatang'
+    });
+    userBills.value = belumTerbayar.value;
+
   } catch (error) {
     throw error
   }
 }
 
 const handleStatusChanged = async () => {
-  await fetchBill(paidModel.value.value);
+
+  if (paidModel.value.value === 'unpaid') {
+    userBills.value = belumTerbayar.value
+  } else if (paidModel.value.value === 'paid') {
+    userBills.value = sudahTerbayar.value
+  } else {
+    userBills.value = mendatang.value
+  }
 }
 
 

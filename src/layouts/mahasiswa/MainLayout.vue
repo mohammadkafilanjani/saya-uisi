@@ -14,18 +14,11 @@
         <q-space />
 
         <div class="q-gutter-sm row items-center no-wrap">
-          <q-btn round dense flat color="grey-8" icon="notifications">
-            <q-badge color="red" text-color="white" floating>
-              2
-            </q-badge>
-            <q-tooltip>Notifications</q-tooltip>
-          </q-btn>
           <q-btn-dropdown round flat>
             <template v-slot:label>
               <q-avatar size="26px">
-                <img src="https://cdn.quasar.dev/img/boy-avatar.png">
+                <img :src="userState.avatar !== null ? userState.avatar : ''">
               </q-avatar>
-              <q-tooltip>Account</q-tooltip>
             </template>
             <q-list>
 
@@ -56,7 +49,7 @@ import DrawerComponent from 'src/components/mahasiswa/layouts/DrawerComponent.vu
 
 
 const { $state } = useMahasiswaLayoutStore()
-const { logout } = useUserStore()
+const { logout, $state: userState } = useUserStore()
 </script>
 
 <style lang="sass">

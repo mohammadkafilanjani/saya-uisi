@@ -49,7 +49,10 @@ export const useUserStore = defineStore('user', {
           useNotify('Berhasil logout', 'green');
           this.router.push({ name: 'SignInPage' });
         } else {
+          this.resetUser();
+          Cookies.remove('token');
           useNotify('Berhasil logout', 'green');
+          this.router.push({ name: 'SignInPage' });
         }
       } catch (error) {
         useNotify('Terjadi masalah', 'red');

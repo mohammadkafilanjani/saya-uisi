@@ -75,7 +75,7 @@
             </div>
           </div>
           <div class="row justify-center">
-            <div class="col-md-11">
+            <div class="col-md-11 col-sm-12 col-xs-12">
               <Suspense>
                 <classScheduleComponent />
                 <template #fallback>

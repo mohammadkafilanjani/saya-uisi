@@ -12,7 +12,7 @@
             {{ userState.name }}
           </div>
           <div class="text-center text-subtitle2 text-grey">
-            {{ mahasiswa.nim }}
+            {{ ktmResponse.data.nim }}
           </div>
           <div class="text-center text-subtitle2 text-grey">
             {{ mahasiswa.prodi }}
@@ -37,7 +37,7 @@
     <q-dialog v-model="dialog" backdrop-filter="brightness(60%)">
       <q-card style="width: 300px">
         <q-card-section>
-          <q-img :src="storageURL + mahasiswa.student_card"></q-img>
+          <q-img :src="`data:image/png;base64,${ktmResponse.data.image}`"></q-img>
         </q-card-section>
 
         <q-card-actions align="around">
@@ -52,8 +52,8 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useUserStore } from 'src/stores/user';
-import { storageURL } from 'src/boot/axios';
 import { useApiWithAuthorization } from 'src/composables/api';
+import axios from 'axios';
 
 const dialog = ref(false);
 
@@ -83,11 +83,7 @@ const fetchMahasiswa = async () => {
 
 const downloadStudentCard = async () => {
   try {
-    const response = await useApiWithAuthorization.get('mahasiswa/download-student-card', {
-      responseType: 'blob',
-    });
-
-    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const url = `data:image/png;base64,${ktmResponse.data.image}`
     const link = document.createElement('a');
     link.href = url;
     link.setAttribute('download', 'student_card.jpg'); // or whatever the filename you want
@@ -100,6 +96,8 @@ const downloadStudentCard = async () => {
 };
 
 await fetchMahasiswa();
+const ktmResponse = await axios.get('ktm_response.json');
+
 </script>
 
 <style scoped></style>

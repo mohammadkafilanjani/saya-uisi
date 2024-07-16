@@ -5,33 +5,34 @@
         <thead>
           <tr>
             <th class="text-left">No</th>
-            <th class="text-left">Kode</th>
-            <th class="text-left">Mata Kuliah</th>
-            <th class="text-left">SKS</th>
-            <th class="text-left">Nilai</th>
-            <th class="text-left">Semester</th>
-            <th class="text-left">Masuk Transkrip</th>
+            <template v-for="(nilaiColumn) in nilaiColumns" :key="nilaiColumn.name">
+              <th class="text-left" v-if="nilaiColumn.name === 'mku_kode'">Kode</th>
+              <th class="text-left" v-else-if="nilaiColumn.name === 'mkl_nama'">Mata Kuliah</th>
+              <th class="text-left" v-else-if="nilaiColumn.name === 'mku_sks'">SKS</th>
+              <th class="text-left" v-else-if="nilaiColumn.name === 'nilaihuruf'">Nilai</th>
+              <th class="text-left" v-else-if="nilaiColumn.name === 'semester'">Semester</th>
+              <th class="text-left" v-else-if="nilaiColumn.name === 'is_transkrip'">Masuk Tranksrip</th>
+            </template>
           </tr>
         </thead>
         <tbody>
-          <template v-for="n in nilai" :key="n.semester">
-            <tr v-for="matkul in n.mata_kuliah" :key="matkul.kode">
-              <td class="text-left">{{ nomor++ }}</td>
-              <td class="text-left">{{ matkul.kode }}</td>
-              <td class="text-left">{{ matkul.nama }}</td>
-              <td class="text-left">{{ matkul.sks }}</td>
-              <td class="text-left">{{ matkul.nilai }}</td>
-              <td class="text-left">{{ n.semester }}</td>
-              <td class="text-left">{{ matkul.masuk_transkrip }}</td>
-            </tr>
-          </template>
+          <tr v-for="(nilaiRow, index) in nilaiRows" :key="nilaiRow.mku_kode"
+            :class="nilaiRow.is_transkrip === 'Tidak' ? 'bg-pink-11' : ''">
+            <td class="text-left">{{ index + 1 }}</td>
+            <td class="text-left">{{ nilaiRow.mku_kode }}</td>
+            <td class="text-left">{{ nilaiRow.mkl_nama }}</td>
+            <td class="text-left">{{ nilaiRow.mku_sks }}</td>
+            <td class="text-left">{{ nilaiRow.nilaihuruf }}</td>
+            <td class="text-left">{{ nilaiRow.semester }}</td>
+            <td class="text-left">{{ nilaiRow.is_transkrip }}</td>
+          </tr>
           <tr>
             <td class="text-center text-weight-bold" colspan="4">Total SKS yang diambil</td>
             <td class="text-center text-weight-bold" colspan="3">{{ totalSks }}</td>
           </tr>
           <tr>
             <td class="text-center text-weight-bold" colspan="4">Total SKS yang diakui</td>
-            <td class="text-center text-weight-bold" colspan="3">{{ totalSksDiakui }}</td>
+            <td class="text-center text-weight-bold" colspan="3">{{ totalSksDiAkui }}</td>
           </tr>
         </tbody>
       </q-markup-table>
@@ -43,29 +44,41 @@
 import { useApiWithAuthorization } from 'src/composables/api';
 import { onMounted, ref } from 'vue';
 
-interface MataKuliah {
-  kode: string;
-  nama: string;
-  sks: number;
-  nilai: string;
-  masuk_transkrip: string
+interface Columns {
+  name: string;
+  friendly_name: string;
+  type: string
 }
 
-interface Nilai {
-  semester: number;
-  mata_kuliah: MataKuliah[];
+interface RowsInterface {
+  mku_kode: string;
+  mkl_nama: string;
+  mku_sks: number;
+  nilaihuruf: string;
+  bobot: number;
+  semester: string;
+  is_transkrip: string;
 }
 
-let nilai = ref<Nilai[]>([]);
-let totalSks = ref(0);
-let totalSksDiakui = ref(0);
+const nilaiRows = ref<RowsInterface[]>([]);
+const nilaiColumns = ref<Columns[]>([]);
+const totalSks = ref(0);
+const totalSksDiAkui = ref(0);
 
 const fetchRiwayatStudi = async () => {
   try {
     const response = await useApiWithAuthorization.get('riwayat-studi')
-    nilai.value = response.data.nilai;
-    totalSks.value = response.data.total_sks
-    totalSksDiakui.value = response.data.total_sks_diakui
+
+    nilaiRows.value = response.data.rows
+    nilaiColumns.value = response.data.columns;
+    nilaiColumns.value = nilaiColumns.value.filter((column: Columns) => column.name !== 'bobot');
+    nilaiRows.value.map((nilai: RowsInterface) => {
+      totalSks.value += nilai.mku_sks;
+    })
+    const filterTotalSksDiAkui = nilaiRows.value.filter((nilai: RowsInterface) => nilai.is_transkrip !== 'Tidak');
+    filterTotalSksDiAkui.map((nilai: RowsInterface) => {
+      totalSksDiAkui.value += nilai.mku_sks;
+    })
 
   } catch (error) {
     console.log(error);
@@ -73,8 +86,6 @@ const fetchRiwayatStudi = async () => {
   }
 
 }
-const nomor = 1;
-
 onMounted(async () => {
   await fetchRiwayatStudi();
 })

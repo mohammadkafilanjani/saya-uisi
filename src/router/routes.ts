@@ -33,11 +33,17 @@ const routes: RouteRecordRaw[] = [
         path: 'pengumuman',
         component: () => import('pages/admin/pengumuman/IndexPage.vue'),
         name: 'PengumumanPage',
+        meta: {
+          requiresAuth: true,
+        },
       },
       {
         path: 'riwayat-kehadiran',
         component: () => import('pages/RiwayatKehadiranPage.vue'),
         name: 'RiwayatKehadiran',
+        meta: {
+          requiresAuth: true,
+        },
       },
     ],
   },
