@@ -53,7 +53,6 @@
 import { ref } from 'vue';
 import { useUserStore } from 'src/stores/user';
 import { useApiWithAuthorization } from 'src/composables/api';
-import axios from 'axios';
 
 const dialog = ref(false);
 
@@ -78,6 +77,8 @@ const mahasiswa = ref<BiodataMahasiswa>({
 
 const fetchMahasiswa = async () => {
   const response = await useApiWithAuthorization.get('mahasiswa/biodata');
+
+
   mahasiswa.value = response.data;
 };
 
@@ -86,7 +87,7 @@ const downloadStudentCard = async () => {
     const url = `data:image/png;base64,${ktmResponse.data.image}`
     const link = document.createElement('a');
     link.href = url;
-    link.setAttribute('download', 'student_card.jpg'); // or whatever the filename you want
+    link.setAttribute('download', 'student_card.jpg');
     document.body.appendChild(link);
     link.click();
     link.remove();
@@ -96,7 +97,9 @@ const downloadStudentCard = async () => {
 };
 
 await fetchMahasiswa();
-const ktmResponse = await axios.get('ktm_response.json');
+const responseKtm = await useApiWithAuthorization.get('/get-ktm');
+const ktmResponse = responseKtm.data
+
 
 </script>
 
