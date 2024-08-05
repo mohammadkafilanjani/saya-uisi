@@ -38,6 +38,14 @@ const routes: RouteRecordRaw[] = [
         },
       },
       {
+        path: 'pengumuman/:id',
+        component: () => import('pages/admin/pengumuman/DetailPage.vue'),
+        name: 'DetailPengumumanPage',
+        meta: {
+          requiresAuth: true,
+        },
+      },
+      {
         path: 'riwayat-kehadiran',
         component: () => import('pages/RiwayatKehadiranPage.vue'),
         name: 'RiwayatKehadiran',
@@ -88,9 +96,20 @@ const routes: RouteRecordRaw[] = [
     children: [
       {
         path: '',
-        component: () => import('pages/admin/IndexPage.vue'),
+        component: () => import('pages/admin/manage-pengumuman/IndexPage.vue'),
         name: 'AdminDashboardPage',
         meta: { requiresAdmin: true },
+      },
+      {
+        path: 'manage-pengumuman',
+        component: () => import('pages/admin/manage-pengumuman/IndexPage.vue'),
+        name: 'AdminPengumumanPage',
+      },
+      {
+        path: 'manage-pengumuman/detail/:id',
+        component: () =>
+          import('pages/admin/manage-pengumuman/DetailPengumumanPage.vue'),
+        name: 'AdminDetailPengumumanPage',
       },
       {
         path: 'user-management',
@@ -157,11 +176,6 @@ const routes: RouteRecordRaw[] = [
           import('pages/admin/payment-management/DetailUserPaymentPage.vue'),
         name: 'AdminPaymentManagementDetailUserPaymentPage',
         meta: { requiresAdmin: true },
-      },
-      {
-        path: 'manage-pengumuman',
-        component: () => import('pages/admin/manage-pengumuman/IndexPage.vue'),
-        name: 'AdminPengumumanPage',
       },
     ],
   },

@@ -1,10 +1,10 @@
 <template>
   <div>
-    <q-dialog v-model="data.addDialog" persistent>
+    <q-dialog @before-show="setModel" v-model="data.editDialog" persistent>
       <q-card style="min-width: 350px">
         <q-form @submit="onSubmit()">
           <q-card-section>
-            <div class="text-h6">Tambah Pengumuman</div>
+            <div class="text-h6">Edit Pengumuman</div>
           </q-card-section>
 
           <q-card-section class="q-pt-none">
@@ -34,8 +34,8 @@
           </q-card-section>
 
           <q-card-actions align="right">
-            <q-btn flat color="primary" label="Cancel" @click="data.addDialog = false" />
-            <q-btn type="submit" color="primary" label="Tambah" :loading="loading" />
+            <q-btn flat color="primary" label="Cancel" @click="data.editDialog = false" />
+            <q-btn type="submit" color="primary" label="Edit" :loading="loading" />
           </q-card-actions>
         </q-form>
       </q-card>
@@ -63,6 +63,14 @@ const pengumumanForm = ref({
   image: [] as any
 });
 
+const setModel = () => {
+  pengumumanForm.value.title = data.edited.title
+  pengumumanForm.value.author = data.edited.author
+  pengumumanForm.value.content = data.edited.content
+  pengumumanForm.value.announcement_date = data.edited.announcement_date
+  pengumumanForm.value.image = null
+}
+
 const rules = {
   title: { required: useRequired() },
   author: { required: useRequired() },
@@ -75,19 +83,21 @@ const loading = ref(false);
 const onSubmit = async () => {
   if (!v$.value.$invalid) {
     loading.value = true;
+    console.log(pengumumanForm.value);
+
     try {
       const response = await useApiWithAuthorization.post(
-        'admin/announcements',
-        pengumumanForm.value, {
+        `admin/announcements/${data.edited.id}`,
+        { ...pengumumanForm.value, _method: 'PUT' }, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       }
       );
-      if (response.status === 201) {
+      if (response.status === 200) {
         await fetchAnn();
-        useNotify('Berhasil menambahkan Pengumuman', 'green');
-        data.addDialog = false;
+        useNotify('Berhasil mengedit Pengumuman', 'green');
+        data.editDialog = false;
         emit('success');
       }
     } catch (error) {

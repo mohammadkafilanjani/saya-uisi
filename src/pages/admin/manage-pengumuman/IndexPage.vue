@@ -17,14 +17,21 @@
                 <th>Judul</th>
                 <th>Penulis</th>
                 <th>Tanggal Dibuat</th>
+                <th>Aksi</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="p in pengumuman" :key="p.id">
+              <tr v-for="p in $state.pengumuman" :key="p.id">
                 <td>{{ p.title }}</td>
                 <td>{{ p.author }}</td>
                 <td>
                   {{ date.formatDate(p.announcement_date, 'DD-MM-YYYY') }}
+                </td>
+                <td>
+                  <q-btn color="blue" flat icon="info"
+                    :to="{ name: 'AdminDetailPengumumanPage', params: { id: p.id } }"><q-tooltip>Detail</q-tooltip></q-btn>
+                  <q-btn color="red" flat icon="delete" @click="handleDelete(p.id)"></q-btn>
+                  <q-btn color="green" flat icon="edit" @click="handleEdit(p)"></q-btn>
                 </td>
               </tr>
             </tbody>
@@ -33,34 +40,44 @@
       </div>
     </q-page>
     <AddDialogComponent />
+    <EditDialogComponent />
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
-import { useApiWithAuthorization } from 'src/composables/api';
+import { onMounted } from 'vue';
 import AddDialogComponent from 'src/components/admin/management-pengumuman/AddDialogComponent.vue';
+import EditDialogComponent from 'src/components/admin/management-pengumuman/EditDialogComponent.vue';
 import { usePengumumanStore } from 'src/stores/pengumuman';
-import { date } from 'quasar';
+import { date, useQuasar } from 'quasar';
+import { useApiWithAuthorization } from 'src/composables/api';
+import { Pengumuman } from 'src/models/pengumuman';
 
-const { $state } = usePengumumanStore();
-interface Pengumuman {
-  id: string;
-  title: string;
-  author: string;
-  announcement_date: string;
+const { $state, fetchAnn } = usePengumumanStore();
+const { dialog } = useQuasar();
+
+const handleDelete = async (id: string) => {
+  dialog({
+    title: 'Konfirmasi',
+    message: 'Ingin menghapus pengumuman?',
+    cancel: true,
+    persistent: true
+  }).onOk(async () => {
+    try {
+      await useApiWithAuthorization.delete(`admin/announcements/${id}`);
+      await fetchAnn();
+
+    } catch (error) {
+      console.log(error);
+
+    }
+  })
 }
-const pengumuman = ref<Pengumuman[]>([]);
 
-const fetchAnn = async () => {
-  try {
-    const response = await useApiWithAuthorization.get('admin/announcements');
-    pengumuman.value = response.data;
-  } catch (error) {
-    console.log(error);
-    throw error;
-  }
-};
+const handleEdit = (p: Pengumuman) => {
+  $state.editDialog = true;
+  $state.edited = p;
+}
 
 onMounted(async () => {
   await fetchAnn();

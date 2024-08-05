@@ -17,7 +17,8 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="p in pengumuman" :key="p.id">
+              <tr v-for="p in pengumuman" :key="p.id"
+                @click="$router.push({ name: 'DetailPengumumanPage', params: { id: p.id } })" class="cursor-pointer">
                 <td>{{ p.title }}</td>
                 <td>{{ p.author }}</td>
                 <td>
