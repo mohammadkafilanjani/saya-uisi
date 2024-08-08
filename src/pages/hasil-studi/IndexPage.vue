@@ -20,8 +20,8 @@
               <th class="text-left" v-else-if="nilaiColumn.name === 'mku_sks'">SKS</th>
               <th class="text-left" v-else-if="nilaiColumn.name === 'nilaihuruf'">Nilai</th>
               <th class="text-left" v-else-if="nilaiColumn.name === 'bobot'">Bobot</th>
-              <th class="text-left">Total</th>
             </template>
+            <th class="text-left">Total</th>
           </tr>
         </thead>
         <tbody>
