@@ -36,7 +36,7 @@
             <td class="text-left">{{ nilaiRow.mku_sks * nilaiRow.bobot }}</td>
           </tr>
           <tr>
-            <td class="text-center text-weight-bold" colspan="3">Total SKS</td>
+            <td class="text-center text-weight-bold" colspan="3">Total</td>
             <td class="text-left text-weight-bold" colspan="3">{{ totalSks }}</td>
             <td class="text-left text-weight-bold">{{ totalSksBobot }}</td>
           </tr>
