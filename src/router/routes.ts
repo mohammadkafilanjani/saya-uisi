@@ -22,6 +22,14 @@ const routes: RouteRecordRaw[] = [
         },
       },
       {
+        path: 'hasil-studi',
+        component: () => import('pages/hasil-studi/IndexPage.vue'),
+        name: 'HasilStudiIndexPage',
+        meta: {
+          requiresAuth: true,
+        },
+      },
+      {
         path: 'informasi-pembayaran',
         component: () => import('pages/informasi-pembayaran/IndexPage.vue'),
         name: 'InformasiPembayaranIndexPage',

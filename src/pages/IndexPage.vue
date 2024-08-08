@@ -105,21 +105,69 @@
 <script setup lang="ts">
 import { useApiWithAuthorization } from 'src/composables/api';
 import { defineAsyncComponent, onMounted, ref } from 'vue';
+import { IsTranskrip, Row } from 'src/models/riwayat-studi';
 
 const SidebarComponent = defineAsyncComponent(() => import('src/components/mahasiswa/SidebarComponent.vue'))
 const classScheduleComponent = defineAsyncComponent(() => import('src/components/mahasiswa/ClassScheduleComponent.vue'));
 
 const totalSks = ref<number>(0);
-const ipk = ref<number>(0);
-const ips = ref<number>(0);
+const ipk = ref<string>('');
+const ips = ref<string>('');
+// Function to get current semester
+function getCurrentSemester(): string {
+  const currentYear = new Date().getFullYear();
+  const currentMonth = new Date().getMonth() + 1;
 
+
+  if (currentMonth >= 7) {
+    return `${currentYear - 1}/${currentYear} Genap`;
+  } else {
+    return `${currentYear - 1}/${currentYear} Ganjil`;
+  }
+}
+
+// Function to calculate IPS
+function calculateIPS(rows: Row[], currentSemester: string): number {
+  let totalSKS = 0;
+  let totalWeightedScore = 0;
+
+  for (const row of rows) {
+    if (row.semester === currentSemester) {
+
+      totalSKS += row.mku_sks;
+      totalWeightedScore += row.mku_sks * parseFloat(row.bobot);
+    }
+  }
+
+
+  return totalSKS === 0 ? 0 : totalWeightedScore / totalSKS;
+}
+
+// Function to calculate IPK
+function calculateIPK(rows: Row[]): number {
+  let totalSKS = 0;
+  let totalWeightedScore = 0;
+
+  for (const row of rows) {
+    if (row.is_transkrip === IsTranskrip.Ya) {
+      totalSKS += row.mku_sks;
+      totalWeightedScore += row.mku_sks * parseFloat(row.bobot);
+    }
+  }
+
+  totalSks.value = totalSKS;
+  return totalSKS === 0 ? 0 : totalWeightedScore / totalSKS;
+}
+
+
+// Function to fetch data and calculate IPS and IPK
 const fetchTotalSks = async () => {
   try {
-    const response = await useApiWithAuthorization.get('mahasiswa/total-sks');
-    totalSks.value = response.data.total_sks;
-    ipk.value = response.data.ipk;
-    ips.value = response.data.ips;
+    const response = await useApiWithAuthorization.get('riwayat-studi');
 
+    const currentSemester = getCurrentSemester();
+    ips.value = calculateIPS(response.data.rows, currentSemester).toFixed(2);
+    ipk.value = calculateIPK(response.data.rows).toFixed(2);
 
   } catch (error) {
     throw error;

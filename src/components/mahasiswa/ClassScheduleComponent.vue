@@ -44,8 +44,8 @@ const jadwalMahasiswa = ref<JadwalMahasiswa[]>([]);
 
 const fetchJadwal = async () => {
   try {
-    const response = await useApiWithAuthorization.get('jadwal-mahasiswa');
-    jadwalMahasiswa.value = response.data.data;
+    // const response = await useApiWithAuthorization.get('jadwal-mahasiswa');
+    // jadwalMahasiswa.value = response.data.data;
 
   } catch (error) {
     console.log(error);

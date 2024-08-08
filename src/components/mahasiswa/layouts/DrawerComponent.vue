@@ -18,6 +18,14 @@
             <q-item-label>Riwayat Studi</q-item-label>
           </q-item-section>
         </q-item>
+        <q-item class="GNL__drawer-item " v-ripple :to="{ name: 'HasilStudiIndexPage' }" clickable>
+          <q-item-section avatar>
+            <q-icon name="auto_stories" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>Hasil Studi</q-item-label>
+          </q-item-section>
+        </q-item>
         <q-item class="GNL__drawer-item" v-ripple clickable :to="{ name: 'InformasiPembayaranIndexPage' }">
           <q-item-section avatar>
             <q-icon name="fa-solid fa-money-bill" />
